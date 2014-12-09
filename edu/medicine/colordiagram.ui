@@ -44,10 +44,10 @@
    <widget class="QSlider" name="horizontalSlider">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>300</x>
       <y>630</y>
-      <width>801</width>
-      <height>20</height>
+      <width>160</width>
+      <height>19</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -55,12 +55,6 @@
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="maximum">
-     <number>139</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>

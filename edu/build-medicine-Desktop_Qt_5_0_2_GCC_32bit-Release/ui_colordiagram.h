@@ -52,11 +52,9 @@ public:
         gridLayout->setContentsMargins(0, 0, 0, 0);
         horizontalSlider = new QSlider(centralwidget);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(10, 630, 801, 20));
+        horizontalSlider->setGeometry(QRect(300, 630, 160, 19));
         sizePolicy.setHeightForWidth(horizontalSlider->sizePolicy().hasHeightForWidth());
         horizontalSlider->setSizePolicy(sizePolicy);
-        horizontalSlider->setMouseTracking(true);
-        horizontalSlider->setMaximum(139);
         horizontalSlider->setOrientation(Qt::Horizontal);
         ColorDiagram->setCentralWidget(centralwidget);
 

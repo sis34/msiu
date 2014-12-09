@@ -23,9 +23,27 @@ void Dialog::on_buttonBox_accepted()
     QString filePath(QDir::currentPath());
     filePath.append("/dialog_file.txt");
 
-    QString newString = ui->height->toPlainText();
+    QString newString = ui->rest_begin->toPlainText();
     newString.append(";");
-    newString.append(ui->weight->toPlainText());
+    newString.append(ui->rest_end->toPlainText());
+    newString.append(";");
+    newString.append(ui->top_begin->toPlainText());
+    newString.append(";");
+    newString.append(ui->top_end->toPlainText());
+    newString.append(";");
+    newString.append(ui->first_minute_begin->toPlainText());
+    newString.append(";");
+    newString.append(ui->first_minute_end->toPlainText());
+    newString.append(";");
+    newString.append(ui->third_minute_begin->toPlainText());
+    newString.append(";");
+    newString.append(ui->third_minute_end->toPlainText());
+    newString.append(";");
+    newString.append(ui->fifth_minute_begin->toPlainText());
+    newString.append(";");
+    newString.append(ui->seventh_minute_begin->toPlainText());
+    newString.append(";");
+    newString.append(ui->seventh_minute_end->toPlainText());
 
 
     QFile file(filePath);
