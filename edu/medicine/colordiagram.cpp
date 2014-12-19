@@ -5,7 +5,11 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QLayout>
-
+#include <QImage>
+#include <QLabel>
+#include <QScrollArea>
+#include <QColor>
+#include "QTime"
 ColorDiagram::ColorDiagram(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ColorDiagram)
@@ -21,27 +25,42 @@ ColorDiagram::~ColorDiagram()
 
 void ColorDiagram::fillGridLayoutTest(QString filePath)
 {
+    QTime midnight(0,0,0);
+    qsrand(midnight.secsTo(QTime::currentTime()));
     QFile *file = new QFile(filePath);
     file->open(QIODevice::ReadOnly);
     QTextStream in(file);
-
-    for(int x = 0; x <= 15; x++){
-        for(int y = 0; y <= 4; y++){
+    int  t[80];
+    for(int x = 0; x <= 4; x++){
+        for(int y = 0; y <= 15; y++){
             QString line = in.readLine();
             int number = line.toInt();
+            t[x*16+y] = number;
+            //ift[x*16+y-16]
+            qDebug() << t[x*16+y];
             QPushButton *btn = new QPushButton(this);
-            btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-            if(number > 750){
-                btn->setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 #2198c0, stop: 0.5 #00ff00, stop: 1 #ff0000); border:1px solid black;");
-            } else if(number <= 750 && number >= 500){
-                btn->setStyleSheet("background-color: red;border:1px solid black;");
-            } else if(number < 500 && number >= 250){
-                btn->setStyleSheet("background-color: blue;border:1px solid black;");
-            } else {
-                btn->setStyleSheet("background-color: green;border:1px solid black;");
+            btn->setSizePolicy(QSizePolicy::Expanding , QSizePolicy::Expanding);
+            if(number < 100 && x < 1){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #ff0000, stop: 0.5 #ff0000, stop: 1 #00ff00); border:0px solid black;");
+            } else if(number <= 200 && number >= 100 && x < 1){
+               btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #00ff00, stop: 0.5 #00ff00, stop: 1 #0000ff); border:0px solid black;");
+             }else if(number > 200  && x < 1){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #0000ff, stop: 0.5 #0000ff, stop: 1 #ff0000); border:0px solid black;");
+            }
+            else if(t[x*16+y-16]<100 && number < 100){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #00ff00, stop: 0.5 #ff0000, stop: 1 #ff0000); border:0px solid black;");
+            }
+            else if(t[x*16+y-16]<200 && t[x*16+y-16] >= 100 && number >=100 && number <=  200){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #0000ff, stop: 0.5 #00ff00, stop: 1 #00ff00); border:0px solid black;");
+            }
+            else if(t[x*16+y-16]>200 && number >=200){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #ff0000, stop: 0.5 #0000ff, stop: 1 #0000ff); border:0px solid black;");
+            }
+            else if(t[x*16+y-16]>200 && number < 100){
+                btn->setStyleSheet("background-color: qlineargradient(x1: 0.3, y1: 0, x2: 0.3, y2: 1, stop: 0 #ff0000, stop: 0.5 #00ff00, stop: 1 #00ff00); border:0px solid black;");
             }
             btn->setDisabled(true);
-            ui->gridLayout->addWidget(btn, y, x);
+            ui->gridLayout->addWidget(btn, x, y);
         }
     }
 
@@ -81,4 +100,7 @@ void ColorDiagram::on_horizontalSlider_sliderMoved(int position)
         fillGridLayoutTest(QString("/mnt/storage1/users/s/si/sis34/Desktop/edu/build-medicine-Desktop_Qt_5_0_2_GCC_32bit-Release/test/test10.txt"));
     }
 
+    ui->label->setText(QString::number(position).append(" Секунда"));
 }
+
+
