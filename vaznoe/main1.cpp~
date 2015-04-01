@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h> 
+#include <fcntl.h> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+#include <unistd.h> 
+#include "polyfmt1.h"
+#include <iostream>
+#include <memory>
+#include <thread>
+#include <vector>
+
+
+
+double **  convert_from_5_16_to_9_31(double ** array, int h, int w){
+  double **res;
+  int rows = w + w - 1;
+  int cols = h + h - 1;
+
+  res = (double **)malloc(rows * sizeof(double *));
+  for (int i = 0; i < cols; i++)
+    res[i] = (double *)malloc(rows * sizeof(double));
+	
+  // создание матрицы для записи результата
+	
+  int arr_i = 0, arr_j = 0; 
+	
+  for(int i = 0; i < cols; i++){
+    for(int j = 0; j < rows; j++){
+      if(i%2 == 0){
+	if(j%2 == 0){
+	  res[i][j] = array[arr_i][arr_j];
+	  arr_j++;
+	}
+      }else continue;
+    }
+    i++;
+    arr_i++;
+    arr_j = 0;
+  }
+	
+  for(int i = 0; i < cols; i++){
+    for(int j = 0; j < rows; j++){
+      if(i%2 == 0 && j%2 == 1){
+	res[i][j]  = (res[i][j-1] + res[i][j+1])/2;
+      }else if(i%2 == 1 && j % 2 != 1){
+	res[i][j] = (res[i-1][j] + res[i+1][j	])/2;
+      } else if(i%2 == 1 && j % 2 == 1){
+	res[i][j] = (res[i-1][j - 1] + res[i - 1][j + 1] + res[i+1][j-1] + res[i+1][j+1])/4;
+      }
+    }
+  }
+  return res;
+}
+
+
+int main(void){
+  //~ double **array;
+  //~ int rows = 17;
+  //~ int cols = 5;
+  //~ int cc, kk;
+  //~ array = (double **)malloc(cols * sizeof(double *));
+  //~ for (cc = 0; kk < rows; cc++)
+    //~ array[cc] = (double *)malloc(rows * sizeof(double));
+
+  int fileWithDateDescriptor = open("./export.240", O_RDONLY);
+  //int fileWithDateDescriptor = open("./exportL.240", O_RDONLY);
+  //	int fileWithDateDescriptor = open("./exportKup.240", O_RDONLY);
+	
+  if(fileWithDateDescriptor == -1){
+    printf("Can't open file");
+    exit(0);
+  }
+	
+  ExportFileHeader* fileHeader = (ExportFileHeader*)malloc(sizeof(ExportFileHeader));
+  read(fileWithDateDescriptor, fileHeader, 3);  
+  read(fileWithDateDescriptor, fileHeader, 256);  
+
+
+  int bytes_read = 0;
+  ExportRecordUnit* record = NULL;
+  int i = 0;
+  int j = 0;
+
+  do{	
+    record = (ExportRecordUnit*)malloc(sizeof(ExportRecordUnit));		
+    bytes_read =  read(fileWithDateDescriptor, record, 512);  
+
+    if (bytes_read == 512){
+	    
+
+      if (i==3000){
+	    while (j<80){
+	      printf("%hd\n", record->ExtroECG[j]);
+	      //if ((j+1)%16 == 0) printf("\n");
+	        //~ for (cc = 0; cc < cols; cc++) {
+	          //~ for (kk = 0; kk < rows-1; kk++){
+	            //~ array[cc][rows-1] = record->ExtroECG[j];
+	          //~ }
+	        //~ }
+	     j++; 
+	  //if  (record->ExtroECG[j] > max ) max = record->ExtroECG[j]; 
+	   }
+
+	//  double ** res1 = convert_from_5_16_to_9_31(array, cols, rows);
+	  
+	//printf("%hd\n", record->ExtroECG[20]);
+	//printf("%hd\n", record->ExtroECG[21]);
+      }
+  }
+      i++; 
+
+      free(record);		
+    } while (bytes_read == 512 ); 
+    //printf("%hd\n", max);
+    close(fileWithDateDescriptor);
+    free(fileHeader);
+    return 0;
+  }
