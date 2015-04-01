@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\dialog.o
+./release\colordiagram.o
+./release\openglwindow.o
+./release\trianglewindow.o
+./release\moc_mainwindow.o
+./release\moc_dialog.o
+./release\moc_colordiagram.o
+./release\moc_openglwindow.o
+);
